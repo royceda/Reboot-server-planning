@@ -19,7 +19,7 @@ import static org.chocosolver.solver.search.strategy.Search.*;
 public class Schedule {
 
 public static void planning(Parser parse) throws ContradictionException{
-		System.out.println("Planning");
+System.out.println("Planning");
 		Model model = new Model("Planning");
 		
 	
@@ -60,7 +60,7 @@ public static void planning(Parser parse) throws ContradictionException{
 	
 		//obj: makespan
 		model.sum(x, "=", z1).post();
-		model.times(z1,3,z).post();
+		model.times(z1,1,z).post();
 		//model.setObjective(Model.MINIMIZE, z);
 		
 		
@@ -100,7 +100,6 @@ public static void planning(Parser parse) throws ContradictionException{
 			}
 		}
 		
-		
 		IntVar   z2    = model.intVar("z2",0,n*n*T*100, false);
 		model.sum(p, "=", z2).post();
 		model.setObjective(Model.MINIMIZE, z2);*/
@@ -111,18 +110,23 @@ public static void planning(Parser parse) throws ContradictionException{
 		IntVar obj2 = model.intVar("obj1",-n*n*T,n*n*T*100, false);
 		model.arithm(sumDistNeg, "+", z, "=", obj1).post();
 		//model.arithm(obj2, "+", z2, "=", obj1).post();
-		model.setObjective(Model.MINIMIZE, obj2);
+		model.setObjective(Model.MINIMIZE, obj1);
 		
 		
 		
 		
 		/********* Constraintes **********/
-		model.allDifferent(x, "DEFAULT").post(); //All different
+		//All different
+		model.allDifferent(x, "DEFAULT").post();
 		
-		/*for(int i = 0; i< pred.length; i++){ //Precedences
+		//Precedences
+		for(int i = 0; i< pred.length; i++){ 
 			int p = pred[i];
-			model.arithm(x[i],">",x[p]).post();
-		}*/
+			//model.arithm(x[i],"<",x[i+1]).post();
+			if(p != 0){// use list for the next time !!!!!!!
+				model.arithm(x[i],"-",x[p],">", phi).post();
+			}
+		}
 		
 		
 		//2 morning, 2 afternoon and 2 night
@@ -131,6 +135,7 @@ public static void planning(Parser parse) throws ContradictionException{
 				model.ifThenElse(model.arithm(x[i], "=", j), model.arithm(y[j][i],"=", 1),  model.arithm(y[j][i],"=", 0));
 			}
 		}
+		
 		
 	
 		for(int i = 1; i<T/24; i++){
@@ -154,7 +159,7 @@ public static void planning(Parser parse) throws ContradictionException{
 			}
 			model.sum(sumAfternoon,"<=", 2).post();
 			
-			//night	
+			//Night	
 			IntVar[] sumNight = model.intVarArray("sumNight",night[i].length, 0, 100000);
 			k = 0;
 			for(int j : night[i]){
@@ -165,16 +170,16 @@ public static void planning(Parser parse) throws ContradictionException{
 		}
 		
 		
-		//Solving
+		/********* Solving **********/
+		
 		//model.getSolver().plugMonitor(po);
 		//model.getSolver().propagate();
-		//System.out.println("Solution found by propagation (objective = "+model.getSolver().getBestSolutionValue()+")");
 		
 		
 		model.getSolver().limitTime("30s");
 		//model.getSolver().setSearch(activityBasedSearch(x));
 		//model.getSolver().setSearch(minDomLBSearch(x));
-		
+	
 		
 		model.getSolver().showStatistics();
 		while(model.getSolver().solve()){	
@@ -192,13 +197,24 @@ public static void planning(Parser parse) throws ContradictionException{
 				}
 			}*/
 		}
+		
+		/********* Interpretations **********/
 		System.out.println("Solution found (objective = "+model.getSolver().getBestSolutionValue()+")");
+		String str = "";
+		for(int i = 0; i<n; i++){		
+			int day = x[i].getValue()/24;
+			int hour = x[i].getValue()%24;
+			str += "x["+i+"] : Day "+day+" Hour "+hour+"\n"; 
+		}
+		System.out.println(str);
 	}
 	
 	
 	
 	
 	public static void main(String[] args) throws ContradictionException, IOException {
+
+		
 		Parser p = new Parser();
 		
 		p.generateTask();
@@ -206,10 +222,5 @@ public static void planning(Parser parse) throws ContradictionException{
 		
 		planning(p);
 	}
-
-
-
-
-
 
 }
