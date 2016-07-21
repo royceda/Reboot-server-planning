@@ -1,4 +1,4 @@
-n,m,Resolution time,nb nodes,number of solution,nb cluster,makespan,distance,preferencies,is optimal
+n,m,Resolution time,nb nodes,number of solution,nb cluster,makespan,distance,preferencies,is optimal,
 5,96,60.000423,598678,419,5,no,yes,no,false,
 
 5,96,60.000423,598678,419,5,no,yes,no,false,
