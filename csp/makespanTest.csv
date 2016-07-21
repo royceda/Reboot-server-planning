@@ -1,4 +1,4 @@
-n,m,Resolution time,nb nodes,number of solution,nb cluster,makespan,distance,preferencies,is optimal,
+n,m(1 week = 96) ,Resolution time,nb nodes,number of solution,nb cluster,makespan,distance,preferencies,is optimal,
 
 
 5,96,0.1663198,281,17,5,yes,no,no,true,
