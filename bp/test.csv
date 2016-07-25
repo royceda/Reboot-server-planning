@@ -1580,3 +1580,5 @@ n,m,BestSolutionValue,Time,NodeCount,SolutionCount,nb cluster,Optimal,
 100,48,49,60.000446,208955,0,0,false,
 100,48,49,60.000248,190733,0,0,false,
 100,48,49,60.00035,201710,0,0,false,
+
+130,48,44,60.002266,212427,4,0,false,
