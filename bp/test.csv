@@ -1579,3 +1579,14 @@ n,m,BestSolutionValue,Time,NodeCount,SolutionCount,nb cluster,Optimal,
 100,48,49,0.35034612,0,0,65,false,
 100,48,49,0.14805767,0,0,65,false,
 100,48,49,0.13392772,0,0,65,false,
+
+
+
+n,m,BestSolutionValue,Time,NodeCount,SolutionCount,nb cluster,Optimal,
+40,48,14,60.00981,19314,23,10,false,
+40,48,14,60.00249,16952,24,10,false,
+40,48,16,60.01851,3871,21,30,false,
+87,48,29,60.00904,5568,16,54,false,
+87,48,44,60.00731,7657,5,54,false,
+87,48,44,60.00273,7553,5,54,false,
+40,48,20,60.0031,51959,19,10,false,
