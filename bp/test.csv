@@ -5390,6 +5390,6 @@ item,bin,BestSolutionValue,Time,NodeCount,SolutionCount,nb cluster,Optimal,
 97,48,33,60.005184,7655,13,50,false,
 70,48,24,60.030125,2495,20,28,false,
 
-item,bin,size of bins,BestSolutionValue,Time,NodeCount,SolutionCount,nb cluster,Optimal,
-130,48,3,44,60.016468,3357,5,50,false,
+item,bin,BestSolutionValue,Time,NodeCount,SolutionCount,nb cluster,Optimal,
+130,48,44,60.016468,3357,5,50,false,
 
