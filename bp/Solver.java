@@ -185,7 +185,135 @@ public class Solver {
 
 	}
 	
+	public int[][] secondModel(int n, int m, int cap, int cluster, HashMap<Integer, Integer> pred){
+		
+		System.out.println("Bin packing");
+		
+		
+		/***** Init and Data *****/
+		this.n = n;
+		this.m = m;
+		//int cap = 1;
+		
+		int[] prefI = new int[n];
+		Arrays.fill(prefI, 0);
+		int[] c = new int[m];
+		Arrays.fill(c, cap);
+		int[] w = new int[n];
+		Arrays.fill(w, 1);
+		
+		
+		Model model = new Model("Bin packing");
+			
+		
+		/*** Constraints **/
+		IntVar[] binLoad = model.intVarArray("binLoad", m, 0, cap);//la charge de chaque bin
+		int[] itemSize = new int[n];
+		Arrays.fill(itemSize, 1);
+		IntVar[] itemBin = model.intVarArray("itemBin", n, 0, m); //le bin de chaque item
+		
+		//BinPacking
+		model.binPacking(itemBin, itemSize , binLoad , 0).post();
+		
 
+		
+		//Precedences
+		for(int i = 0; i<n; i++){
+			if(pred.get(i) != null){
+				int predId = pred.get(i);	
+				model.arithm(itemBin[i], ">=", itemBin[predId]).post();
+			}
+		}
+		
+		
+		/***Objectifs ***/
+		IntVar z = model.intVar("z", 0, m*m);
+		IntVar obj = model.intVar("obj", 0, m*m);
+		IntVar obj1 = model.intVar("obj1", 0, m*m);
+		IntVar sumD = model.intVar("sumD", 0, m*m);
+		IntVar sumP = model.intVar("sumP", 0, m*m);
+		IntVar dist[] = model.intVarArray(n, 0, m*m);
+		
+		
+		
+		//Distance
+		for(int i = 0; i<n; i++){
+			if(pred.get(i) != null){
+				int predId = pred.get(i);
+				model.distance(itemBin[i], itemBin[predId], "=", dist[i]).post();
+			}
+		}
+		model.sum(dist,"=",sumD).post();	
+		
+		IntVar distPref[] = model.intVarArray(n, 0, m*m);
+		IntVar abs[] = model.intVarArray(n, 0, m*m);
+		IntVar pref[] = model.intVarArray(n, prefI);
+		
+		//Preferences
+		for(int i = 0; i<n; i++){
+			model.distance(itemBin[i], pref[i], "=", distPref[i]).post();
+		}
+		model.sum(distPref,"=", sumP).post();
+		
+		
+		//first bin 
+		int[] coeffs = new int[m];
+		for(int j = 0; j<m; j++){
+			coeffs[j] = j;
+		}
+		model.scalar(binLoad, coeffs , "=", z).post();
+		//model.sum(itemBin, "=", z).post();
+		
+		//portfolio
+		model.arithm(sumD, "+", z, "=", obj).post();
+		model.arithm(obj, "-", sumP, "=", obj1).post();
+		model.setObjective(Model.MINIMIZE, obj1);
+		
+			
+			
+		/***** Solving *****/
+		model.getSolver().limitTime("10s");
+		//model.getSolver().propagate();
+		
+		//model.getSolver().setSearch(setVarSearch(y));  // use activity-based search (classical black box search)	
+		model.getSolver().showStatistics();
+		model.getSolver().solve();
+		while(model.getSolver().solve()){	
+			for(int i = 0; i<n; i++){
+				System.out.println(itemBin[i]);	
+			}	
+			for(int j = 0; j<m; j++){
+				if(binLoad[j].getValue() != 0)
+					System.out.println(binLoad[j]);
+			}
+		}
+		
+			
+		System.out.println("Solution found (objective = "+model.getSolver().getBestSolutionValue()+")");
+		model.getSolver().printStatistics();
+		
+		for(int i = 0; i<n; i++){
+			System.out.println(itemBin[i]);	
+		}	
+		
+		for(int j = 0; j<m; j++){
+			if(binLoad[j].getValue() != 0)
+				System.out.println(binLoad[j]);
+		}
+		
+		if(model.getSolver().isObjectiveOptimal()){
+			System.out.println("OPTIMAL !!!!");
+		}else{
+			System.out.println("NON OPTIMAL !!!!");
+		}
+		
+		
+		int X[][] = new int[n][m];
+		for(int i = 0; i<n; i++){
+			X[i][itemBin[i].getValue()] = 1;
+		}
+		return X;
+	}
 	public void postprocessing(){}	
 
 }
