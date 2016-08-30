@@ -1,4 +1,4 @@
-package final;
+package finale;
 
 import java.util.Arrays;
 import java.util.HashMap;
