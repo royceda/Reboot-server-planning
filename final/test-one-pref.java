@@ -1,3 +1,6 @@
+n,m,best Solution value, Time, nodeCount, SolutionCount, cluster, optimal,
+
+
 
 10,12,27,3.5731382,176112,25,0,true,
 10,12,32,10.001292,576533,13,5,false,
