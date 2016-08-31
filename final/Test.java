@@ -1,4 +1,4 @@
-package finale;
+package kp;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -10,7 +10,7 @@ public class Test {
 
 	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
 		
-		Model kp = new Model();
+		knapsack kp = new knapsack();
 	
 		
 		HashMap<Integer, int[]> pref1 = new 	HashMap<Integer, int[]>();
@@ -21,20 +21,22 @@ public class Test {
 		
 		int pred1[] = {1,2,3,-1};
 		
-		kp.solve(10,6, 2, pred1, pref1);
+		String test = kp.binPacking(100,72, 2, pred1, pref1);
 		
+		System.out.println(test);
 		
 		PrintWriter writer = null;
 		String result = "";
 		
 		
-		for(int n = 10; n<=190; n+=30){ //item
-			for(int m = 12; m<=96; m+=12){ //bin
-				for(int p = 1; p <= Math.floor(0.75*m); p++ ){ //pref
-					for(int s = 2; s<4; s++){
-						for(int c = 0; c<= n; c+=5){ //cluster
+		for(int n = 10; n<=180; n+=60){ //item
+			for(int m = 12; m<=72; m+=12){ //bin
+				for(int p = 1; p <= Math.floor(0.5*m); p+=5 ){ //pref
+					for(int s = 2; s<=3; s++){
+						for(int c = 0; c<= Math.floor(0.5*n); c+=5){ //cluster
 									
-							if(n <= m*s){		
+							if(n <= m*s){	
+								
 								//create preferencies
 								HashMap<Integer, int[]> pref = new 	HashMap<Integer, int[]>();
 								for(int i =0; i<n; i++){
@@ -55,9 +57,9 @@ public class Test {
 									else
 										pred[i] = -1;
 								}
-								
 								System.out.println("\nTest: n = "+n+", m = "+m+", cluster = "+c+", nb preference max = "+p+", capacity: "+s);
-								result += kp.solve(n,m, s, pred, pref);
+						
+								result += kp.binPacking(n,m, s, pred, pref);
 								
 								writer = new PrintWriter("output/bp/test2.out", "UTF-8");
 								
