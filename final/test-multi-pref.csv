@@ -1,4 +1,4 @@
-n,m,best Solution value, Time, nodeCount, SolutionCount, pred, optimal,
+n,m,best Solution value, Time, nodeCount, SolutionCount, cluster, optimal,
 
 10,12,46,10.001316,2505545,1,0,false,
 10,12,29,10.001358,2092084,12,5,false,
